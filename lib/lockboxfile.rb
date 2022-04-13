@@ -12,6 +12,12 @@ class LockboxFile
     @lockbox = Lockbox.new(key: key)
   end
 
+  def decrypt(srcfile, destfile)
+
+    File.write(destfile, read(srcfile))
+
+  end
+
   def encrypt(srcfile, destfile, delete: false)
 
     r = write destfile, File.read(srcfile)
