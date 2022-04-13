@@ -4,9 +4,11 @@
 
 require 'stringio'
 require 'lockbox'
+require 'rxfreader'
 
 
 class LockboxFile
+  include RXFRead
 
   def initialize(key)
     @lockbox = Lockbox.new(key: key)
@@ -14,24 +16,24 @@ class LockboxFile
 
   def decrypt(srcfile, destfile)
 
-    File.write(destfile, read(srcfile))
+    FileX.write(destfile, read(srcfile))
 
   end
 
   def encrypt(srcfile, destfile, delete: false)
 
-    r = write destfile, File.read(srcfile)
-    FileUtils.rm srcfile if delete
+    r = write destfile, FileX.read(srcfile)
+    FileX.rm srcfile if delete
 
     return r
 
   end
 
   def read(filepath)
-    @lockbox.decrypt File.read(filepath)
+    @lockbox.decrypt FileX.read(filepath)
   end
 
   def write(filepath, content)
-    File.write filepath, @lockbox.encrypt(content)
+    FileX.write filepath, @lockbox.encrypt(content)
   end
 end
